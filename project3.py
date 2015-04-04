@@ -5,16 +5,7 @@ from collections import Counter
 from itertools import chain
 
 
-def binary_to_decimal(pageNumber):
-    int(pageNumber,2)
-    binary = pageNumber
-    decimal = 0
-    for digit in binary:
-        decimal = decimal*2 + int(digit)
-    print decimal
 
-
-#dic = createdDict(list,file)
 d ={}
 pp = pprint.PrettyPrinter(indent=4)
 with open("input3a.data") as f:
