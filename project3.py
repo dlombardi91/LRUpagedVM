@@ -96,10 +96,11 @@ with open("input3a.data") as f:
             y.append( vBit)
             r.append(1)
             n.append('P1:')
-            z =  zip(x,y,r)
-
+            z =  zip(n,x)
+            p.append(z)
+            print (pageNum, "added to P1 page table")
         frm = map(str,x)
-        print (pageNum, "added to P1 page table")
+
 
 #terminaltable print#
     pageTableP1 = [[],
