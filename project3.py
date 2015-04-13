@@ -9,7 +9,7 @@ from Queue import PriorityQueue
 from time import gmtime, strftime
 import time
 from itertools import izip, imap
-import numpy as np
+from terminaltables import AsciiTable
 
 
 # class PCD(object):
@@ -59,12 +59,35 @@ with open("input3a.data") as f:
     validBitP1 = [1]*55
     resBitP1 = [0]*55
     newItems=d['P1:']
+    procNames='P1:'
     zippedP1 = zip(newItems, validBitP1, resBitP1)
-
+    keyValue = groupIndex
+    vals = d['P1:']
+    # N = len(vals)
+    # dicts=[]
+    #
+    # procZip = [dict(zip(keys,vals)) for keys in d]
+    # print procZip
     x = []
     y =[]
     r =[]
-    for pageNum, vBit, rBit in zip(newItems, validBitP1, resBitP1):
+    n=[]
+    p=[]
+    frameTable=range(16)
+    # for  keyz, pageNum in zip(d.keys(), newItems):
+    #
+    #     if (procNames,pageNum) in p:
+    #         pass
+    #     if (procNames,pageNum) not in p:
+    #         n.append(procNames)
+    #         x.append(pageNum)
+    #         z = zip(n,x)
+    #         print ("THIS IS Z",procNames)
+    #         p.append(z)
+    #         frm = map(str,x)
+    #         print (pageNum, "added to P1 page table")
+    # print p
+    for  pageNum, vBit, rBit in zip(newItems, validBitP1, resBitP1):
 
         if pageNum in x:
             pass
@@ -72,22 +95,38 @@ with open("input3a.data") as f:
             x.append(pageNum)
             y.append( vBit)
             r.append(1)
+            n.append('P1:')
             z =  zip(x,y,r)
 
+        frm = map(str,x)
+        print (pageNum, "added to P1 page table")
+
+#terminaltable print#
+    pageTableP1 = [[],
+    ['Page #', 'Frame#'],
+    [('\n'.join(map(str,x))),
+    ('\n'.join(map(str,(i for i,x in enumerate(frm)))))]
+    ]
+    table = AsciiTable(pageTableP1)
+
+    table.title='---P1 Page Table'
+    print table.table
 
 
-            print (pageNum, "added to P1 page table")
-    print ("--------------P1 Page Table--------------")
-    print ("\tPage#--Valid Bit--ResBit")
-#    z= '\n'.join('\t'.join(map(str,z)))
-    print ('\n'.join(map(str,z)))
-    #pp.pprint(z)
 
-
+    frameTableP1 = [
+    [],['Frame#', 'Process#', 'Page#'],
+    [('\n'.join(map(str,frameTable))),('\n'.join(map(str,n))), (('\n'.join(map(str,x)))) ]
+    ]
+    table1 = AsciiTable(frameTableP1)
+    table1.title='--------FRAME TABLE'
+    print table1.table
 #    pp.pprint(d['P2:'])
     validBitP2 = [1]*len(d['P2:'])
     resBitP2 = [0]*len(d['P2:'])
     zippedP2 = zip(d['P2:'], validBitP2, resBitP2)
+
+
 #    print zippedP2
 
 #    pp.pprint(d['P3:'])
