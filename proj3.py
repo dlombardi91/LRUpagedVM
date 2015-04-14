@@ -31,6 +31,8 @@ from terminaltables import AsciiTable
 q = Queue.PriorityQueue()
 d ={}
 pp = pprint.PrettyPrinter(indent=4)
+indexes=[]
+pages=[]
 with open("input3a.data") as f:
     for line in f:
 
@@ -47,15 +49,25 @@ with open("input3a.data") as f:
         try:
             new = d[groupIndex]
         #    q.put( (new, count))
+        #    d[groupIndex] = []
+        #    d[groupIndex].append(decimal)
+        #    print d
 
-
+            indexes.append(groupIndex)
+    #        new = indexes[groupIndex]
+            pages.append(decimal)
+            zipz=zip(indexes,pages)
+        #    print zipz
         except:
+        #     pass
+            # pages.append(decimal)
 
-            d[groupIndex] = []
+             d[groupIndex] = []
         d[groupIndex].append(decimal)
 
 
-    pp.pprint(d)
+
+#    pp.pprint(d)
     validBitP1 = [1]*55
     resBitP1 = [0]*55
     newItems=d['P1:']
@@ -82,10 +94,47 @@ with open("input3a.data") as f:
 #    print newBig
     x = [] #page numbers
     y =[] #validBit list
-    r =[] #resident bit list
+    ra =range(16) #resident bit list
+    rb=range(16)
     n=[] #processID list
     p=[] #procID and page Number list
-    frameTable=range(16)
+    frameTable=range(31)
+    newX= []
+    newP1=[]
+    newP2 =[]
+    newP3=[]
+    newP4=[]
+    newP5=[]
+    newFrame= range(16)
+    for procNum, pageNum in zipz:
+      # print zipz
+       if (procNum, pageNum) in newX:
+
+        #   indexed=[j[0] for j in zipFrame if j[1]==((procNum, pageNum))]
+
+        indexed = newX.index((procNum,pageNum))
+        zipFrame.append(zipFrame.pop(indexed))
+        print indexed
+
+       if (procNum, pageNum) not in newX and len(newX)<16:
+          # newX=range(16)
+           #newX = zip(procNum,pageNum)
+           newX.append((procNum,pageNum))
+        #    ra.append(procNum)
+        #    rb.append(pageNum)
+        #    newX = zip(ra,rb)
+           zipFrame = zip(newFrame, newX)
+           print ("Page Fault occured for:",(procNum, pageNum))
+           if(procNum=='P1:'):
+                 newP1.append((pageNum))
+           if(procNum=='P2:'):
+                 newP2.append((pageNum))
+           if(procNum=='P3:'):
+                 newP3.append((pageNum))
+           if(procNum=='P4:'):
+                 newP4.append((pageNum))
+           if(procNum=='P5:'):
+                 newP5.append((pageNum))
 
     for  pageNum, vBit, rBit in zip(newItems, validBitP1, resBitP1):
 
@@ -94,7 +143,7 @@ with open("input3a.data") as f:
         if pageNum not in x:
             x.append(pageNum)
             y.append( vBit)
-            r.append(1)
+            # r.append(1)
             n.append("p1:")
             z =  zip(n,x)
             p.append(z)
@@ -102,23 +151,65 @@ with open("input3a.data") as f:
             print (pageNum, "added to P1 page table")
         frm = map(str,x)
 
-
-#terminaltable print#
+    ####process table p1
     pageTableP1 = [[],
     ['Page #', 'Frame#'],
-    [('\n'.join(map(str,x))),
-    ('\n'.join(map(str,(i for i,x in enumerate(frm)))))]
+    [('\n'.join(map(str,newP1))),
+
+    ('\n'.join(map(str,([i for i,c in enumerate(zipFrame) if c[1][0]=='P1:'   ]))))]
     ]
     table = AsciiTable(pageTableP1)
-
     table.title='---P1 Page Table'
     print table.table
 
+    ####process table p2
+    pageTableP2 = [[],
+    ['Page #', 'Frame#'],
+    [('\n'.join(map(str,newP2))),
 
+    ('\n'.join(map(str,([i for i,c in enumerate(zipFrame) if c[1][0]=='P2:'   ]))))]
+    ]
+    table2 = AsciiTable(pageTableP2)
+    table2.title='---P2 Page Table'
+    print table2.table
+
+    ####process table p3
+    pageTableP3 = [[],
+    ['Page #', 'Frame#'],
+    [('\n'.join(map(str,newP3))),
+
+    ('\n'.join(map(str,([i for i,c in enumerate(zipFrame) if c[1][0]=='P3:'   ]))))]
+    ]
+    table3 = AsciiTable(pageTableP3)
+    table3.title='---P3 Page Table'
+    print table3.table
+
+    ####process table p4
+    pageTableP4 = [[],
+    ['Page #', 'Frame#'],
+    [('\n'.join(map(str,newP4))),
+
+    ('\n'.join(map(str,([i for i,c in enumerate(zipFrame) if c[1][0]=='P4:'   ]))))]
+    ]
+    table4 = AsciiTable(pageTableP4)
+    table4.title='---4 Page Table'
+    print table4.table
+
+    ####process table p5
+    pageTableP5 = [[],
+    ['Page #', 'Frame#'],
+    [('\n'.join(map(str,newP5))),
+
+    ('\n'.join(map(str,([i for i,c in enumerate(zipFrame) if c[1][0]=='P5:'   ]))))]
+    ]
+    table5 = AsciiTable(pageTableP5)
+    table5.title='---P5 Page Table'
+    print table5.table
 
     frameTableP1 = [
     [],['Frame#', 'Process#', 'Page#'],
-    [('\n'.join(map(str,frameTable))),('\n'.join(map(str,n))), (('\n'.join(map(str,x)))) ]
+    [('\n'.join(map(str,range(16)))),('\n'.join(map(str,[j[1][0] for j in zipFrame]))),
+    (('\n'.join(map(str,[l[1][1] for l in zipFrame]))))]
     ]
     table1 = AsciiTable(frameTableP1)
     table1.title='--------FRAME TABLE'
